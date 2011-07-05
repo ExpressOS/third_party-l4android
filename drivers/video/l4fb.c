@@ -24,6 +24,13 @@
 #include <linux/sysdev.h>
 #include <asm/uaccess.h>
 
+#ifdef CONFIG_HAS_WAKELOCK
+       #include <linux/wakelock.h>
+#endif
+#ifdef CONFIG_HAS_EARLYSUSPEND
+       #include <linux/earlysuspend.h>
+#endif
+
 #include <asm/generic/l4lib.h>
 #include <l4/sys/err.h>
 #include <l4/sys/task.h>
@@ -174,6 +181,9 @@ static const struct fb_fix_screeninfo l4fb_fix = {
 
 /* -- implementations -------------------------------------------------- */
 
+#ifdef CONFIG_HAS_WAKELOCK
+struct wake_lock l4fb_wakelock;
+#endif
 
 static void l4fb_init_screen(struct l4fb_screen *screen)
 {
@@ -187,9 +197,9 @@ static void l4fb_init_screen(struct l4fb_screen *screen)
 	screen->ev_irq = L4_INVALID_CAP;
 	screen->irqnum = 0;
 
-	screen->touchscreen = 0;
-	screen->abs2rel = 0;
-	screen->singledev = 0;
+	screen->touchscreen = touchscreen;
+	screen->abs2rel = abs2rel;
+	screen->singledev = singledev;
 
 	screen->last_rel_x = 0;
 	screen->last_rel_y = 0;
@@ -799,8 +809,14 @@ L4_CV static void input_event_put(l4re_event_t *event, void *data)
 
 static irqreturn_t event_interrupt(int irq, void *data)
 {
+#ifdef CONFIG_HAS_WAKELOCK
+       wake_lock(&l4fb_wakelock);
+#endif
 	struct l4fb_screen *screen = (struct l4fb_screen *)data;
 	l4re_event_buffer_consumer_foreach_available_event(&screen->ev_buf, data, input_event_put);
+#ifdef CONFIG_HAS_WAKELOCK
+       wake_unlock(&l4fb_wakelock);
+#endif
 	return IRQ_HANDLED;
 }
 
@@ -1342,6 +1358,14 @@ static int __init l4fb_probe(struct platform_device *dev)
 		screen->refresh_sleep = t;
 	}
 
+#ifdef CONFIG_HAS_WAKELOCK
+       wake_lock_init(&l4fb_wakelock, WAKE_LOCK_SUSPEND, "l4fb_wakelock");
+#endif
+//#ifdef CONFIG_HAS_EARLYSUSPEND
+//       printk(KERN_INFO "[L4FB] register_early_suspend stuff\n");
+//       register_early_suspend(&l4fb_early_suspend);
+//#endif
+
 	info = framebuffer_alloc(0, &dev->dev);
 	if (!info)
 		goto failed_after_screen_alloc;
@@ -1514,6 +1538,10 @@ static void __exit l4fb_exit(void)
 	debugfs_remove(debugfs_unmaps);
 	debugfs_remove(debugfs_updates);
 	debugfs_remove(debugfs_dir);
+#endif
+
+#ifdef CONFIG_HAS_WAKELOCK
+       wake_lock_destroy(&l4fb_wakelock);
 #endif
 
 	list_for_each_entry_safe(screen, tmp, &l4fb_screens, next_screen) {
