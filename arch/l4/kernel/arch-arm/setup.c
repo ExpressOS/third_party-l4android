@@ -923,6 +923,10 @@ void __init setup_arch(char **cmdline_p)
 	paging_init(mdesc);
 	request_standard_resources(mdesc);
 
+#ifdef CONFIG_L4
+	reserve_bootmem(0, PAGE_SIZE, BOOTMEM_DEFAULT);
+#endif
+
 #ifdef CONFIG_SMP
 	if (is_smp())
 		smp_init_cpus();
