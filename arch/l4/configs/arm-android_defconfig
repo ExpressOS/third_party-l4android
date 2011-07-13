@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux/l4 2.6.39-l4 Kernel Configuration
-# Wed Jul 13 13:44:43 2011
+# Wed Jul 13 14:29:28 2011
 #
 
 #
@@ -700,7 +700,11 @@ CONFIG_HW_RANDOM=m
 # PPS generators support
 #
 # CONFIG_W1 is not set
-# CONFIG_POWER_SUPPLY is not set
+CONFIG_POWER_SUPPLY=y
+CONFIG_POWER_SUPPLY_DEBUG=y
+CONFIG_PDA_POWER=y
+# CONFIG_TEST_POWER is not set
+# CONFIG_BATTERY_BQ27x00 is not set
 # CONFIG_HWMON is not set
 # CONFIG_THERMAL is not set
 # CONFIG_WATCHDOG is not set
