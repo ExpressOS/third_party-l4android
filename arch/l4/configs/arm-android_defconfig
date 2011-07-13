@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux/l4 2.6.39-l4 Kernel Configuration
-# Wed Jul  6 00:08:31 2011
+# Wed Jul 13 13:44:43 2011
 #
 
 #
@@ -9,7 +9,7 @@
 #
 CONFIG_L4=y
 CONFIG_L4_LINUX=y
-CONFIG_L4_OBJ_TREE="/home/mlange/projects/l4re/obj/l4/arm-rv"
+CONFIG_L4_OBJ_TREE="/l4re/build/l4/arm/rv"
 # CONFIG_L4_ARCH_X86 is not set
 CONFIG_L4_ARCH_ARM=y
 CONFIG_L4_VMLINUZ_SUFFIX=".android"
@@ -163,7 +163,7 @@ CONFIG_SYSCTL_SYSCALL=y
 CONFIG_KALLSYMS=y
 # CONFIG_KALLSYMS_ALL is not set
 # CONFIG_KALLSYMS_EXTRA_PASS is not set
-# CONFIG_HOTPLUG is not set
+CONFIG_HOTPLUG=y
 CONFIG_PRINTK=y
 CONFIG_BUG=y
 CONFIG_ELF_CORE=y
@@ -360,6 +360,7 @@ CONFIG_DMABOUNCE=y
 CONFIG_ARM_AMBA=y
 # CONFIG_PCI_SYSCALL is not set
 # CONFIG_ARCH_SUPPORTS_MSI is not set
+# CONFIG_PCCARD is not set
 
 #
 # Kernel Features
@@ -547,6 +548,8 @@ CONFIG_NET_ACTIVITY_STATS=y
 #
 # Generic Driver Options
 #
+CONFIG_UEVENT_HELPER_PATH=""
+# CONFIG_DEVTMPFS is not set
 CONFIG_STANDALONE=y
 CONFIG_PREVENT_FIRMWARE_BUILD=y
 CONFIG_FW_LOADER=y
@@ -914,7 +917,7 @@ CONFIG_EXT2_FS=y
 # CONFIG_FS_POSIX_ACL is not set
 CONFIG_FILE_LOCKING=y
 CONFIG_FSNOTIFY=y
-CONFIG_DNOTIFY=y
+# CONFIG_DNOTIFY is not set
 CONFIG_INOTIFY_USER=y
 # CONFIG_FANOTIFY is not set
 # CONFIG_QUOTA is not set
