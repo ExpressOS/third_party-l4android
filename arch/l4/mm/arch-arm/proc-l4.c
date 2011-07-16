@@ -26,10 +26,13 @@ void cpu_arm926_dcache_clean_area(void *addr, int sz)
 { l4_cache_clean_data((unsigned long)addr, (unsigned long)addr + sz - 1); }
 void cpu_v6_dcache_clean_area(void *addr, int sz)
 { l4_cache_clean_data((unsigned long)addr, (unsigned long)addr + sz - 1); }
+void cpu_v7_dcache_clean_area(void *addr, int sz)
+{ l4_cache_clean_data((unsigned long)addr, (unsigned long)addr + sz - 1); }
 
 void cpu_sa1100_switch_mm(unsigned long pgd_phys, struct mm_struct *mm) {}
 void cpu_arm926_switch_mm(unsigned long pgd_phys, struct mm_struct *mm) {}
 void cpu_v6_switch_mm(unsigned long pgd_phys, struct mm_struct *mm) {}
+void cpu_v7_switch_mm(unsigned long pgd_phys, struct mm_struct *mm) {}
 
 extern unsigned long l4x_set_pte(struct mm_struct *mm, unsigned long addr, pte_t pteptr, pte_t pteval);
 extern void          l4x_pte_clear(struct mm_struct *mm, unsigned long addr, pte_t ptep);
@@ -51,6 +54,8 @@ void cpu_sa1100_set_pte_ext(pte_t *pteptr, pte_t pteval, unsigned int ext)
 void cpu_arm926_set_pte_ext(pte_t *pteptr, pte_t pteval, unsigned int ext)
 { l4x_cpu_set_pte_ext(pteptr, pteval, ext); }
 void cpu_v6_set_pte_ext(pte_t *pteptr, pte_t pteval, unsigned int ext)
+{ l4x_cpu_set_pte_ext(pteptr, pteval, ext); }
+void cpu_v7_set_pte_ext(pte_t *pteptr, pte_t pteval, unsigned int ext)
 { l4x_cpu_set_pte_ext(pteptr, pteval, ext); }
 
 
@@ -84,10 +89,21 @@ int cpu_v6_do_idle(void)
 	return 0;
 }
 
+int cpu_v7_do_idle(void)
+{
+#ifdef CONFIG_L4_VCPU
+	l4x_global_halt();
+#endif
+	return 0;
+}
+
 void cpu_sa1100_proc_init(void) { printk("%s\n", __func__); }
 void cpu_arm926_proc_init(void) { printk("%s\n", __func__); }
 #ifdef CONFIG_CPU_V6K
 void cpu_v6_proc_init(void) { printk("%s\n", __func__); }
+#endif
+#ifdef CONFIG_CPU_V7
+void cpu_v7_proc_init(void) { printk("%s\n", __func__); }
 #endif
 
 /*
@@ -101,6 +117,9 @@ void cpu_sa1100_proc_fin(void) { }
 void cpu_arm926_proc_fin(void) { }
 #ifdef CONFIG_CPU_V6K
 void cpu_v6_proc_fin(void) { }
+#endif
+#ifdef CONFIG_CPU_V7
+void cpu_v7_proc_fin(void) { }
 #endif
 
 void  __attribute__((noreturn)) l4x_cpu_reset(unsigned long addr)
@@ -160,6 +179,12 @@ void v6wbi_flush_user_tlb_range(unsigned long start, unsigned long end,
 {
 }
 #endif
+#ifdef CONFIG_CPU_V7
+void v7wbi_flush_user_tlb_range(unsigned long start, unsigned long end,
+                               struct vm_area_struct *mm)
+{
+}
+#endif
 
 void arm926_flush_user_cache_range(unsigned long start, unsigned long end,
                                  unsigned int flags)
@@ -195,6 +220,12 @@ void v4wbi_flush_kern_tlb_range(unsigned long start, unsigned long end)
 
 #ifdef CONFIG_CPU_V6K
 void v6wbi_flush_kern_tlb_range(unsigned long start, unsigned long end)
+{
+}
+#endif
+
+#ifdef CONFIG_CPU_V7
+void v7wbi_flush_kern_tlb_range(unsigned long start, unsigned long end)
 {
 }
 #endif

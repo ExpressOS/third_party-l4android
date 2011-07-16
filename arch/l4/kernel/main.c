@@ -2963,6 +2963,7 @@ unsigned l4x_fmrx(unsigned long reg)
 			      return (fpsid_cached = fmrx(cr0));
 		case FPINST:  return l4x_fpu_get(smp_processor_id())->fpinst;
 		case FPINST2: return l4x_fpu_get(smp_processor_id())->fpinst2;
+		case MVFR0:   return 0;
 		default: printk("Invalid fmrx-reg: %ld\n", reg);
 	}
 	return 0;
