@@ -766,10 +766,14 @@ static void __init kuser_get_tls_init(unsigned long vectors)
 
 void __init early_trap_init(void)
 {
+#ifdef CONFIG_L4
+	unsigned long vectors = upage_addr;
+#else
 #if defined(CONFIG_CPU_USE_DOMAINS)
 	unsigned long vectors = CONFIG_VECTORS_BASE;
 #else
 	unsigned long vectors = (unsigned long)vectors_page;
+#endif
 #endif
 #if 0
 	extern char __stubs_start[], __stubs_end[];
@@ -797,11 +801,7 @@ void __init early_trap_init(void)
 	/*
 	 * Do processor specific fixups for the kuser helpers
 	 */
-#ifdef CONFIG_L4
-	kuser_get_tls_init(upage_addr);
-#else
 	kuser_get_tls_init(vectors);
-#endif
 
 	/*
 	 * Copy signal return handlers into the vector page, and
