@@ -2955,6 +2955,7 @@ asm(
 unsigned l4x_fmrx(unsigned long reg)
 {
 	static unsigned long fpsid_cached;
+	static unsigned long mvfr0_cached = 0;
 	switch (reg) {
 		case FPEXC:   return l4x_fpu_get(smp_processor_id())->fpexc;
 		case FPSCR:   return fmrx(cr1);
@@ -2963,7 +2964,10 @@ unsigned l4x_fmrx(unsigned long reg)
 			      return (fpsid_cached = fmrx(cr0));
 		case FPINST:  return l4x_fpu_get(smp_processor_id())->fpinst;
 		case FPINST2: return l4x_fpu_get(smp_processor_id())->fpinst2;
-		case MVFR0:   return 0;
+		case MVFR0:   if(mvfr0_cached)
+		                  return mvfr0_cached;
+		              return (mvfr0_cached = fmrx(cr7));
+        // case MVFR1:   return fmrx(cr6); // for neon support
 		default: printk("Invalid fmrx-reg: %ld\n", reg);
 	}
 	return 0;
