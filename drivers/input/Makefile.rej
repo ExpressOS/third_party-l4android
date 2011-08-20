@@ -1,0 +1,7 @@
+--- drivers/input/Makefile	2011-07-05 23:16:51.270480467 +0200
++++ drivers/input/Makefile	2011-08-19 21:32:59.383531353 +0200
+@@ -24,3 +24,4 @@
+ obj-$(CONFIG_INPUT_MISC)	+= misc/
+ 
+ obj-$(CONFIG_INPUT_APMPOWER)	+= apm-power.o
++obj-$(CONFIG_INPUT_KEYRESET)	+= keyreset.o
