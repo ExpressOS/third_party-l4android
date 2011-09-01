@@ -1246,7 +1246,7 @@ static int l4fb_init_session(struct fb_info *fb, struct l4fb_screen *screen)
 		var->green.length = vinfo.pixel_info.g.size;
 		var->blue.offset = vinfo.pixel_info.b.shift;
 		var->blue.length = vinfo.pixel_info.b.size;
-		var->bits_per_pixel = l4re_video_bits_per_pixel(&vinfo.pixel_info);
+		var->bits_per_pixel = ginfo->pixel_info.bytes_per_pixel * 8;
 	} else {
 		/* in this case the user must allocate views via the ioctls */
 		/* use the goos info for the reference size */
@@ -1260,7 +1260,7 @@ static int l4fb_init_session(struct fb_info *fb, struct l4fb_screen *screen)
 		var->green.length = ginfo->pixel_info.g.size;
 		var->blue.offset = ginfo->pixel_info.b.shift;
 		var->blue.length = ginfo->pixel_info.b.size;
-		var->bits_per_pixel = l4re_video_bits_per_pixel(&ginfo->pixel_info);
+		var->bits_per_pixel = ginfo->pixel_info.bytes_per_pixel * 8;
 	}
 
 	/* We cannot really set (smaller would work) screen paramenters
