@@ -317,6 +317,7 @@ static int pda_power_probe(struct platform_device *pdev)
 		ret = PTR_ERR(ac_draw);
 	}
 
+#ifdef CONFIG_USB_OTG_UTILS
 	transceiver = otg_get_transceiver();
 	if (transceiver && !pdata->is_usb_online) {
 		pdata->is_usb_online = otg_is_usb_online;
@@ -324,6 +325,7 @@ static int pda_power_probe(struct platform_device *pdev)
 	if (transceiver && !pdata->is_ac_online) {
 		pdata->is_ac_online = otg_is_ac_online;
 	}
+#endif
 
 	if (pdata->is_ac_online) {
 		ret = power_supply_register(&pdev->dev, &pda_psy_ac);
@@ -367,6 +369,7 @@ static int pda_power_probe(struct platform_device *pdev)
 		}
 	}
 
+#ifdef CONFIG_USB_OTG_UTILS
 	if (transceiver && pdata->use_otg_notifier) {
 		otg_nb.notifier_call = otg_handle_notification;
 		ret = otg_register_notifier(transceiver, &otg_nb);
@@ -376,6 +379,7 @@ static int pda_power_probe(struct platform_device *pdev)
 		}
 		polling = 0;
 	}
+#endif
 
 	if (polling) {
 		dev_dbg(dev, "will poll for status\n");
