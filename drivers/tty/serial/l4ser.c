@@ -74,7 +74,14 @@ l4ser_getchar(struct l4ser_uart_port *l4port)
 	    || l4_vcon_read(l4port->vcon_cap, &c, 1) <= 0)
 		res = -1;
 	else
-		res = c;
+	  {
+        // whereas on X86 (char)-1 == (int)-1, this is not true on ARM
+        if(c == (char)-1)
+		  res = -1;
+        else
+		  res = c;
+	  }
+	//	res = c;
 	L4XV_U(f);
 	return res;
 }
