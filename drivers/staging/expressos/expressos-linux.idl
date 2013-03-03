@@ -1,0 +1,107 @@
+void
+take_helper([out] int pid, [out] uint shadowBinderVMStart,
+            [out] int workspace_fd, [out] uint workspace_size);
+
+[ipc_buf] int
+clock_gettime(int clk_id);
+
+[ipc_buf] int
+open(int helper_pid, int flags, int mode);
+
+[noreturn] int
+close(int helper_pid, int fd);
+
+[ipc_buf] int
+vfs_read(int helper_pid, int fd, int count, [ref] uint pos);
+
+[async] int
+vfs_read_async(int helper_pid, [opaque] uint handle,
+               ipc_ptr_t data, int fd, int count, [ref] uint pos);
+[async] int
+vfs_write_async(int helper_pid, [opaque] uint handle,
+                ipc_ptr_t data, int fd, int count, [ref] uint pos);
+
+[ipc_buf] int
+fstat_combined(int helper_pid, int type, int fd, [out] uint stat_len);
+
+[ipc_buf] int
+stat_combined(int helper_pid, int type, [out] uint stat_len);
+
+[async] int
+open_and_get_size_async(int helper_pid, [opaque] uint handle,
+                        ipc_ptr_t filename, int flags, int mode,
+                        [out] uint file_size);
+[async] int
+open_and_read_pages_async(int helper_pid, [opaque] uint handle,
+                          ipc_ptr_t data, int npages, int flags, int mode,
+                          [out] uint file_size);
+[async,ipc_buf] int
+access_async(int helper_pid, [opaque] uint handle,
+             ipc_ptr_t filename, int mode);
+
+int ftruncate(int helper_pid, int fd, int length);
+
+[noreturn] int
+pipe(int helper_pid, [out] int read_pipe, [out] int write_pipe);
+
+[ipc_buf] int mkdir(int helper_pid, int mode);
+
+[ipc_buf] int unlink(int helper_pid);
+
+int ashmem_ioctl(int helper_pid, int fd, uint cmd, int arg0);
+
+int ioctl(int helper_pid, int fd, uint cmd, int arg0);
+
+int fcntl64(int helper_pid, int fd, int cmd, int arg0);
+
+[async] int scatter_write_page_async(int helper_pid, [opaque] uint handle,
+                                     int fd, int page_count, ipc_ptr_t data);
+
+[async,noreturn] int
+socket_async(int helper_pid, uint handle, int domain, int type, int protocol);
+
+[async] int
+set_sockopt_async(int helper_pid, [opaque] uint handle, ipc_ptr_t buf,
+                  int sockfd, int level, int optname, int optlen);
+
+[async] int get_sockopt_async(int helper_pid, [opaque] uint handle,
+                              ipc_ptr_t buf, int sockfd, int level,
+                              int optname, [ref] int optlen);
+
+[async] int bind_async(int helper_pid, [opaque] uint handle,
+                       ipc_ptr_t buf, int sockfd, int addrlen);
+
+[async] int connect_async(int helper_pid, [opaque] uint handle,
+                          ipc_ptr_t buf, int sockfd, int addrlen);
+
+[async] int get_sockname_async(int helper_pid, [opaque] uint handle,
+                               ipc_ptr_t buf, int sockfd, [ref] int addrlen);
+
+[async,noreturn] int poll_async(int helper_pid, uint handle,
+                                ipc_ptr_t fds, int nfds, int timeout);
+
+[ipc_buf] int sendto(int helper_pid, int sockfd, int len, int flags, int addrlen);
+[ipc_buf] int recvfrom(int helper_pid, int sockfd, int len,
+                       int flags, [ref] int addrlen);
+int shutdown(int helper_pid, int sockfd, int how);
+
+[async,noreturn] int futex_wait(int helper_pid, uint handle, int op,
+                                intptr_t shadowAddr, int val,
+                                uint tv_sec, uint tv_nsec,
+                                uint bitset);
+
+[async,noreturn] int futex_wake(int helper_pid, uint handle, int op,
+                                intptr_t shadowAddr, uint bitset);
+
+uint get_user_page(int helper_pid, uint faultType, intptr_t shadowAddress);
+[noreturn] uint alien_mmap2(int helper_pid, intptr_t addr, int length, int prot,
+                            int flags, int fd, int pgoffset);
+
+[ipc_buf] void free_user_pages(int count);
+
+[async,noreturn] int
+binder_write_read_async(int helper_pid, uint handle, ipc_ptr_t buffer,
+                        uint size, uint bwr_write_size,
+                        uint patch_table_entries, uint patch_table_offset);
+
+[ipc_buf] void write_app_info(int helper_pid, int length);

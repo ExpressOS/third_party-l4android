@@ -7,5 +7,12 @@ config EXPRESSOS
        ---help---
          Enable support for ExpressOS.
 
+if EXPRESSOS
+
+config EXPRESSOS_DRIVER
+	tristate "ExpressOS driver"
+	default y
+
+endif
 endmenu
 
