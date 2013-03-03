@@ -407,6 +407,12 @@ static struct socket *sock_from_file(struct file *file, int *err)
 	return NULL;
 }
 
+int sock_is_sock_file(struct file *file)
+{
+        return file->f_op == &socket_file_ops;
+}
+EXPORT_SYMBOL(sock_is_sock_file);
+
 /**
  *	sockfd_lookup - Go from a file number to its socket slot
  *	@fd: file handle

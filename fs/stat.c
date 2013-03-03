@@ -18,6 +18,12 @@
 #include <asm/uaccess.h>
 #include <asm/unistd.h>
 
+#ifdef CONFIG_EXPRESSOS
+#define EXPRESSOS_NON_STATIC
+#else
+#define EXPRESSOS_NON_STATIC static
+#endif
+
 void generic_fillattr(struct inode *inode, struct kstat *stat)
 {
 	stat->dev = inode->i_sb->s_dev;
@@ -116,7 +122,8 @@ EXPORT_SYMBOL(vfs_lstat);
  * For backward compatibility?  Maybe this should be moved
  * into arch/i386 instead?
  */
-static int cp_old_stat(struct kstat *stat, struct __old_kernel_stat __user * statbuf)
+
+EXPRESSOS_NON_STATIC int cp_old_stat(struct kstat *stat, struct __old_kernel_stat __user * statbuf)
 {
 	static int warncount = 5;
 	struct __old_kernel_stat tmp;
@@ -152,6 +159,10 @@ static int cp_old_stat(struct kstat *stat, struct __old_kernel_stat __user * sta
 	tmp.st_ctime = stat->ctime.tv_sec;
 	return copy_to_user(statbuf,&tmp,sizeof(tmp)) ? -EFAULT : 0;
 }
+
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(cp_old_stat);
+#endif
 
 SYSCALL_DEFINE2(stat, const char __user *, filename,
 		struct __old_kernel_stat __user *, statbuf)
@@ -192,7 +203,7 @@ SYSCALL_DEFINE2(fstat, unsigned int, fd, struct __old_kernel_stat __user *, stat
 
 #endif /* __ARCH_WANT_OLD_STAT */
 
-static int cp_new_stat(struct kstat *stat, struct stat __user *statbuf)
+EXPRESSOS_NON_STATIC int cp_new_stat(struct kstat *stat, struct stat __user *statbuf)
 {
 	struct stat tmp;
 
@@ -241,6 +252,10 @@ static int cp_new_stat(struct kstat *stat, struct stat __user *statbuf)
 	tmp.st_blksize = stat->blksize;
 	return copy_to_user(statbuf,&tmp,sizeof(tmp)) ? -EFAULT : 0;
 }
+
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(cp_new_stat);
+#endif
 
 SYSCALL_DEFINE2(newstat, const char __user *, filename,
 		struct stat __user *, statbuf)
@@ -328,7 +343,7 @@ SYSCALL_DEFINE3(readlink, const char __user *, path, char __user *, buf,
 /* ---------- LFS-64 ----------- */
 #ifdef __ARCH_WANT_STAT64
 
-static long cp_new_stat64(struct kstat *stat, struct stat64 __user *statbuf)
+EXPRESSOS_NON_STATIC long cp_new_stat64(struct kstat *stat, struct stat64 __user *statbuf)
 {
 	struct stat64 tmp;
 
@@ -365,6 +380,10 @@ static long cp_new_stat64(struct kstat *stat, struct stat64 __user *statbuf)
 	return copy_to_user(statbuf,&tmp,sizeof(tmp)) ? -EFAULT : 0;
 }
 
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(cp_new_stat64);
+#endif
+#
 SYSCALL_DEFINE2(stat64, const char __user *, filename,
 		struct stat64 __user *, statbuf)
 {

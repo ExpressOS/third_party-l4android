@@ -269,6 +269,10 @@ int expand_files(struct files_struct *files, int nr)
 	return expand_fdtable(files, nr);
 }
 
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(expand_files);
+#endif
+
 static int count_open_files(struct fdtable *fdt)
 {
 	int size = fdt->max_fds;

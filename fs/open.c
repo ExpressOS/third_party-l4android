@@ -61,6 +61,10 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
 	return ret;
 }
 
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(do_truncate);
+#endif
+
 static long do_sys_truncate(const char __user *pathname, loff_t length)
 {
 	struct path path;
@@ -365,6 +369,10 @@ out:
 	put_cred(override_cred);
 	return res;
 }
+
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(sys_faccessat);
+#endif
 
 SYSCALL_DEFINE2(access, const char __user *, filename, int, mode)
 {

@@ -340,7 +340,7 @@ static int f_getown_ex(struct file *filp, unsigned long arg)
 	return ret;
 }
 
-static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
+long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
 		struct file *filp)
 {
 	long err = -EINVAL;
@@ -425,6 +425,10 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
 	}
 	return err;
 }
+
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(do_fcntl);
+#endif
 
 static int check_fcntl_cmd(unsigned cmd)
 {

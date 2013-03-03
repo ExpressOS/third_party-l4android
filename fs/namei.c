@@ -2548,6 +2548,10 @@ SYSCALL_DEFINE2(mkdir, const char __user *, pathname, int, mode)
 	return sys_mkdirat(AT_FDCWD, pathname, mode);
 }
 
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(sys_mkdir);
+#endif
+
 /*
  * The dentry_unhash() helper will try to drop the dentry early: we
  * should have a usage count of 2 if we're the only user of this
@@ -2773,6 +2777,10 @@ SYSCALL_DEFINE1(unlink, const char __user *, pathname)
 {
 	return do_unlinkat(AT_FDCWD, pathname);
 }
+
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(sys_unlink);
+#endif
 
 int vfs_symlink(struct inode *dir, struct dentry *dentry, const char *oldname)
 {

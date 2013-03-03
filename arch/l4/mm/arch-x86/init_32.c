@@ -687,6 +687,7 @@ void __init initmem_init(void)
 }
 #endif /* !CONFIG_NEED_MULTIPLE_NODES */
 
+extern void *l4x_main_memory_start;
 static void __init zone_sizes_init(void)
 {
 	unsigned long max_zone_pfns[MAX_NR_ZONES];
@@ -699,6 +700,14 @@ static void __init zone_sizes_init(void)
 	max_zone_pfns[ZONE_DMA] =
 		virt_to_phys((char *)MAX_DMA_ADDRESS) >> PAGE_SHIFT;
 #endif
+#endif
+#ifdef CONFIG_EXPRESSOS
+	/*
+         * HH: Force all page to be allocated in main mem.
+         * That way the ExpressOS kernel can always map the page in
+         * its address space.
+         */
+	max_zone_pfns[ZONE_DMA] = (unsigned)l4x_main_memory_start >> PAGE_SHIFT; 
 #endif
 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
 #ifdef CONFIG_HIGHMEM

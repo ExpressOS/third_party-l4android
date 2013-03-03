@@ -193,3 +193,4 @@ SYSCALL_DEFINE1(personality, unsigned int, personality)
 EXPORT_SYMBOL(register_exec_domain);
 EXPORT_SYMBOL(unregister_exec_domain);
 EXPORT_SYMBOL(__set_personality);
+EXPORT_SYMBOL(default_exec_domain);

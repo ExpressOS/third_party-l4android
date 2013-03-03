@@ -224,9 +224,9 @@ extern void start_kernel(void);
 l4_cap_idx_t l4x_start_thread_id __nosavedata = L4_INVALID_CAP;
 l4_cap_idx_t l4x_start_thread_pager_id __nosavedata = L4_INVALID_CAP;
 
-static l4re_ds_t l4x_ds_mainmem __nosavedata;
+l4re_ds_t l4x_ds_mainmem __nosavedata;
 static l4re_ds_t l4x_ds_isa_dma __nosavedata;
-static void *l4x_main_memory_start;
+void *l4x_main_memory_start;
 static void *l4x_isa_dma_memory_start;
 static l4_addr_t l4x_vmalloc_areaid __nosavedata;
 unsigned long l4x_vmalloc_memory_start;
@@ -256,6 +256,12 @@ struct l4x_phys_virt_mem {
 unsigned long l4x_mainmem_size = CONFIG_L4_MEMSIZE << 20;
 //unsigned long l4x_isa_dma_size   = 2 << 20;
 unsigned long l4x_isa_dma_size   = 0;
+
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(l4x_main_memory_start);
+EXPORT_SYMBOL(l4x_ds_mainmem);
+EXPORT_SYMBOL(l4x_mainmem_size);
+#endif
 
 static struct l4x_phys_virt_mem l4x_phys_virt_addrs[L4X_PHYS_VIRT_ADDRS_MAX_ITEMS] __nosavedata;
 int l4x_phys_virt_addr_items;

@@ -1,0 +1,11 @@
+menu "ExpressOS"
+
+config EXPRESSOS
+       bool "ExpressOS Extensions"
+       depends on PROC_FS
+       default N
+       ---help---
+         Enable support for ExpressOS.
+
+endmenu
+

@@ -980,6 +980,10 @@ SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
 	return error;
 }
 
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(sys_clock_gettime);
+#endif
+
 SYSCALL_DEFINE2(clock_adjtime, const clockid_t, which_clock,
 		struct timex __user *, utx)
 {

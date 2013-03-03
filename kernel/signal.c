@@ -1201,6 +1201,10 @@ struct sighand_struct *__lock_task_sighand(struct task_struct *tsk,
 	return sighand;
 }
 
+#ifdef CONFIG_EXPRESSOS
+EXPORT_SYMBOL(__lock_task_sighand);
+#endif
+
 /*
  * send signal info to all the members of a group
  */
@@ -2305,6 +2309,7 @@ long do_no_restart_syscall(struct restart_block *param)
 {
 	return -EINTR;
 }
+EXPORT_SYMBOL_GPL(do_no_restart_syscall);
 
 static void __set_task_blocked(struct task_struct *tsk, const sigset_t *newset)
 {
